@@ -26,7 +26,6 @@
         }
     </script>
     <style>
-        /* Custom scrollbar for clean dashboard feel */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
@@ -407,7 +406,6 @@
                 return;
             }
 
-            // 중복 검사
             const duplicate = db.sports.find(s => s.name === name && s.id !== id);
             if (duplicate) {
                 showToast('이미 존재하는 스포츠 이름입니다.', 'error');
@@ -442,7 +440,6 @@
             const linkedLeagues = db.leagues.filter(l => l.sportId === id);
             if (linkedLeagues.length > 0) {
                 if (!confirm(`경고: 이 스포츠에 속한 ${linkedLeagues.length}개의 리그 및 하위 팀/선수 데이터에 영향을 줄 수 있습니다. 정말 삭제하시겠습니까?`)) return;
-                // 연관 데이터 전체 정리 (캐스케이딩)
                 const leagueIds = linkedLeagues.map(l => l.id);
                 db.leagues = db.leagues.filter(l => l.sportId !== id);
                 const teamIds = db.teams.filter(t => leagueIds.includes(t.leagueId)).map(t => t.id);
@@ -927,7 +924,7 @@
         function deleteTeam(id) {
             const linkedPlayers = db.players.filter(p => p.teamId === id);
             if (linkedPlayers.length > 0) {
-                if (!confirm(`경고: 이 팀에 소속된 ${linkedPlayers.length명의 선수가 함께 삭제됩니다. 정말 삭제하시겠습니까?`)) return;
+                if (!confirm(`경고: 이 팀에 소속된 ${linkedPlayers.length}명의 선수가 함께 삭제됩니다. 정말 삭제하시겠습니까?`)) return;
                 db.players = db.players.filter(p => p.teamId !== id);
             } else {
                 if (!confirm('정말 이 팀을 삭제하시겠습니까?')) return;
@@ -1077,7 +1074,6 @@
             const isEdit = id !== null;
             const player = isEdit ? db.players.find(p => p.id === id) : { name: '', teamId: '', nationality: '', position: '', backNumber: '', birthDate: '', profileUrl: '', description: '' };
 
-            // 계층형 선택 (스포츠 -> 리그 -> 팀)을 위한 초기값 계산
             let initialSportId = '';
             let initialLeagueId = '';
             if (isEdit && player.teamId) {
@@ -1160,7 +1156,6 @@
                 </form>
             `);
 
-            // Initialize cascading dropdowns
             if (initialSportId) {
                 onSportCascadeChange(initialSportId, initialLeagueId);
                 if (initialLeagueId) {
@@ -1440,7 +1435,6 @@
             container.classList.add('hidden');
         }
 
-        // Close modal when clicking outside
         window.onclick = function(event) {
             const container = document.getElementById('modal-container');
             if (event.target === container) {
